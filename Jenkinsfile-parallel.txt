@@ -1,0 +1,56 @@
+pipeline {
+  agent any
+
+  parameters {
+    booleanParam(name: "executeStage1", defaultValue: true, description: "")
+    booleanParam(name: "executeParallel", defaultValue: true, description: "")
+    booleanParam(name: "executeStage4", defaultValue: true, description: "")
+  }
+
+  stages {
+    stage('stage1') {
+      when {
+        expression {
+          params.executeStage1
+        }
+      }
+      steps {
+        echo "stage1"
+      }
+    }
+
+    stage('parallel') {
+      when {
+        expression {
+          params.executeParallel
+        }
+      }
+      parallel {
+        stage('stage2') {
+          steps {
+            echo "stage2"
+          }
+        }
+
+        stage('stage3') {
+          steps {
+            echo "stage3"
+          }
+        }
+
+      }
+    }
+
+    stage('stage4') {
+      when {
+        expression {
+          params.executeStage4
+        }
+      }
+      steps {
+        echo "stage4"
+      }
+    }
+  }
+
+}
